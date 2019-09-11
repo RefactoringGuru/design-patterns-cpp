@@ -134,7 +134,7 @@ class ConcreteProductB1: public AbstractProductB{
      */
     std::string anotherUsefulFunctionB(const AbstractProductA* collaborator) const override{
         const std::string result= collaborator->usefulFunctionA();
-        return "The result of the B1 collaborating with "+ result;
+        return "The result of the B1 collaborating with ( "+ result+" )";
     }
 };
 
@@ -155,7 +155,7 @@ class ConcreteProductB2: public AbstractProductB{
      */
     std::string anotherUsefulFunctionB(const AbstractProductA* collaborator) const override{
         const std::string result= collaborator->usefulFunctionA();
-        return "The result of the B2 collaborating with "+ result;
+        return "The result of the B2 collaborating with ( "+ result+" )";
     }
 };
 
@@ -233,6 +233,7 @@ int main(){
     ConcreteFactory1* f1= new ConcreteFactory1();
     ClientCode(f1);
     delete f1;
+    std::cout << std::endl;
     std::cout << "Client: Testing the same client code with the second factory type:\n";
     ConcreteFactory2* f2= new ConcreteFactory2();
     ClientCode(f2);
