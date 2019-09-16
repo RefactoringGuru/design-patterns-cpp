@@ -33,7 +33,7 @@ For code execution in VSCode you will need to set up your task first. An example
     ]
 }
 ```
-Then you just need to start the executable.  
+Then you just need to start the executable.In case you have some doubts here you have an useful [tutorial] using vscode.   
 
 ## Contributor's Guide
 
@@ -56,3 +56,4 @@ This work is licensed under a Creative Commons Attribution-NonCommercial-NoDeriv
 
 
 [Google style guide]: <https://google.github.io/styleguide/cppguide.html#C++_Version>
+[tutorial]: <https://www.youtube.com/watch?v=mdGnpOvUt5Y>
