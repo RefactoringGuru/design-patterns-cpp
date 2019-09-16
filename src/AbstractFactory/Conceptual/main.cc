@@ -33,8 +33,8 @@ class AbstractProductB;
 class AbstractFactory
 {
 public:
-    virtual AbstractProductA* createProductA() const = 0;
-    virtual AbstractProductB* createProductB() const = 0;
+    virtual AbstractProductA* CreateProductA() const = 0;
+    virtual AbstractProductB* CreateProductB() const = 0;
 };
 
 /**
@@ -47,9 +47,14 @@ public:
 
 class AbstractProductA
 {
+    /**
+ * EN: Define virtual destructor in case you need it.
+ *
+ * RU: 
+ */
 public:
-    virtual ~AbstractProductA(){}; // define as needed
-    virtual std::string usefulFunctionA() const = 0;    
+    virtual ~AbstractProductA(){};
+    virtual std::string UsefulFunctionA() const = 0;    
 };
 
 
@@ -62,7 +67,7 @@ public:
 class ConcreteProductA1 : public AbstractProductA
 {
 public:
-    std::string usefulFunctionA() const override
+    std::string UsefulFunctionA() const override
     {
         return "The result of the product A1.";
     }
@@ -70,7 +75,7 @@ public:
 
 class ConcreteProductA2 : public AbstractProductA
 {
-    std::string usefulFunctionA() const override
+    std::string UsefulFunctionA() const override
     {
         return "The result of the product A2.";
     }
@@ -94,9 +99,9 @@ class AbstractProductB
      * RU: Продукт B способен работать самостоятельно...
      */
 public:
-    virtual ~AbstractProductB(){}; // define as needed
+    virtual ~AbstractProductB(){};
 
-    virtual std::string usefulFunctionB() const = 0;
+    virtual std::string UsefulFunctionB() const = 0;
     /**
      * EN: ...but it also can collaborate with the ProductA.
      *
@@ -108,7 +113,7 @@ public:
      * Абстрактная Фабрика гарантирует, что все продукты, которые она создает,
      * имеют одинаковую вариацию и, следовательно, совместимы.
      */
-    virtual std::string anotherUsefulFunctionB(const AbstractProductA *collaborator) const = 0;
+    virtual std::string AnotherUsefulFunctionB(const AbstractProductA& collaborator) const = 0;
 };
 
 /**
@@ -120,7 +125,7 @@ public:
 class ConcreteProductB1: public AbstractProductB{
     public:
 
-    std::string usefulFunctionB() const override{
+    std::string UsefulFunctionB() const override{
         return "The result of the product B1.";
     }
     /**
@@ -132,15 +137,15 @@ class ConcreteProductB1: public AbstractProductB{
      * менее, он принимает любой экземпляр Абстрактного Продукта А в качестве
      * аргумента.
      */
-    std::string anotherUsefulFunctionB(const AbstractProductA* collaborator) const override{
-        const std::string result= collaborator->usefulFunctionA();
+    std::string AnotherUsefulFunctionB(const AbstractProductA& collaborator) const override{
+        const std::string result= collaborator.UsefulFunctionA();
         return "The result of the B1 collaborating with ( "+ result+" )";
     }
 };
 
 class ConcreteProductB2: public AbstractProductB{
     public:
-    std::string usefulFunctionB() const override{
+    std::string UsefulFunctionB() const override{
         return "The result of the product B2.";
     }
 
@@ -153,8 +158,8 @@ class ConcreteProductB2: public AbstractProductB{
      * менее, он принимает любой экземпляр Абстрактного Продукта А в качестве
      * аргумента.
      */
-    std::string anotherUsefulFunctionB(const AbstractProductA* collaborator) const override{
-        const std::string result= collaborator->usefulFunctionA();
+    std::string AnotherUsefulFunctionB(const AbstractProductA& collaborator) const override{
+        const std::string result= collaborator.UsefulFunctionA();
         return "The result of the B2 collaborating with ( "+ result+" )";
     }
 };
@@ -176,12 +181,12 @@ class ConcreteProductB2: public AbstractProductB{
 class ConcreteFactory1 : public AbstractFactory
 {
 public:
-    AbstractProductA* createProductA() const override
+    AbstractProductA* CreateProductA() const override
     {
         return new ConcreteProductA1();
     }
 
-    AbstractProductB* createProductB() const override
+    AbstractProductB* CreateProductB() const override
     {
         return new ConcreteProductB1();
     }
@@ -195,12 +200,12 @@ public:
 class ConcreteFactory2 : public AbstractFactory
 {
 public:
-    AbstractProductA* createProductA() const override
+    AbstractProductA* CreateProductA() const override
     {
         return new ConcreteProductA2();
     }
 
-    AbstractProductB* createProductB() const override
+    AbstractProductB* CreateProductB() const override
     {
         return new ConcreteProductB2();
     }
@@ -219,24 +224,24 @@ public:
  * любой подкласс фабрики или продукта клиентскому коду, не нарушая его.
  */
 
-void ClientCode(const AbstractFactory* factory){
-    const AbstractProductA* productA =factory->createProductA();
-    const AbstractProductB* productB =factory->createProductB();
-    std::cout << productB->usefulFunctionB() << "\n";
-    std::cout << productB->anotherUsefulFunctionB(productA) << "\n";
-    delete productA;
-    delete productB;
+void ClientCode(const AbstractFactory& factory){
+    const AbstractProductA* product_a =factory.CreateProductA();
+    const AbstractProductB* product_b =factory.CreateProductB();
+    std::cout << product_b->UsefulFunctionB() << "\n";
+    std::cout << product_b->AnotherUsefulFunctionB(*product_a) << "\n";
+    delete product_a;
+    delete product_b;
 }
 
 int main(){
     std::cout << "Client: Testing client code with the first factory type:\n";
     ConcreteFactory1* f1= new ConcreteFactory1();
-    ClientCode(f1);
+    ClientCode(*f1);
     delete f1;
     std::cout << std::endl;
     std::cout << "Client: Testing the same client code with the second factory type:\n";
     ConcreteFactory2* f2= new ConcreteFactory2();
-    ClientCode(f2);
+    ClientCode(*f2);
     delete f2;
     return 0;
 }
