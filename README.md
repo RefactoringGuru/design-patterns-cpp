@@ -56,4 +56,4 @@ This work is licensed under a Creative Commons Attribution-NonCommercial-NoDeriv
 
 
 [Google style guide]: <https://google.github.io/styleguide/cppguide.html#C++_Version>
-[tutorial]: <https://www.youtube.com/watch?v=mdGnpOvUt5Y>
+[tutorial]: <https://www.youtube.com/watch?v=-erXR6k9TeE>
