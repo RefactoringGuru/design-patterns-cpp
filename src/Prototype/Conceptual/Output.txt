@@ -1,0 +1,5 @@
+Let's create a simple bullet
+fire Simple bullet with direction : 90
+
+Let's create a Good bullet
+fire Good Bullet with direction :10
