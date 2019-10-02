@@ -67,7 +67,7 @@ public:
      * только один экземпляр каждого подкласса.
      */
 
-    static Singleton *getInstance();
+    static Singleton *GetInstance();
     /**
      * EN: Finally, any singleton should define some business logic, which can
      * be executed on its instance.
@@ -75,7 +75,7 @@ public:
      * RU: Наконец, любой одиночка должен содержать некоторую бизнес-логику,
      * которая может быть выполнена на его экземпляре.
      */
-    void someBusinessLogic()
+    void SomeBusinessLogic()
     {
         // ...
     }
@@ -86,7 +86,7 @@ public:
      *
      * RU: 
      */
-Singleton *Singleton::getInstance()
+Singleton *Singleton::GetInstance()
 {
     /**
      * EN: This is a safer way to create an instance. instance = new Singleton is dangeruous 
@@ -105,8 +105,8 @@ Singleton *Singleton::getInstance()
  */
 void ClientCode()
 {
-    Singleton *s1 = Singleton::getInstance();
-    Singleton *s2 = Singleton::getInstance();
+    Singleton *s1 = Singleton::GetInstance();
+    Singleton *s2 = Singleton::GetInstance();
     if (s1 == s2)
     {
         std::cout << "Singleton works, both variables contain the same instance.\n";
