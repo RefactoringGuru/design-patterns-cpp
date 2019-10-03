@@ -14,7 +14,7 @@ using std::string;
 // Назначение: Позволяет копировать объекты, не вдаваясь в подробности их
 // реализации.
 
-enum BulletType
+enum Type
 {
 	SIMPLE = 0,
 	GOOD
@@ -28,8 +28,7 @@ enum BulletType
  * происходит клонирование значений полей разных типов.
  */
 
-class Bullet
-{
+class Prototype{
 
 protected:
 	string bullet_name_;
@@ -38,13 +37,13 @@ protected:
 	float direction_;
 
 public:
-	Bullet() {}
-	Bullet(string bullet_name, float speed, float fire_power)
+	Prototype() {}
+	Prototype(string bullet_name, float speed, float fire_power)
 		: bullet_name_(bullet_name), speed_(speed), fire_power_(fire_power)
 	{
 	}
-	virtual ~Bullet() {}
-	virtual Bullet *Clone() const = 0;
+	virtual ~Prototype() {}
+	virtual Prototype *Clone() const = 0;
 	virtual void Fire(float direction){
 		this->direction_ = direction;
 		std::cout << "fire "<< bullet_name_<<" with direction : " << direction << std::endl;
@@ -61,14 +60,14 @@ public:
  * RU: 
  */
 
-class SimpleBullet : public Bullet
+class ConcretePrototype1 : public Prototype
 {
 private:
 	float damage_power_;
 
 public:
-	SimpleBullet(string bullet_name, float speed, float fire_power, float damage_power)
-		: Bullet(bullet_name, speed / 2, fire_power), damage_power_(damage_power)
+	ConcretePrototype1(string bullet_name, float speed, float fire_power, float damage_power)
+		: Prototype(bullet_name, speed / 2, fire_power), damage_power_(damage_power)
 	{
 	}
 
@@ -79,25 +78,25 @@ public:
      *
      * RU: 
      */
-	Bullet *Clone() const override
+	Prototype *Clone() const override
 	{
-		return new SimpleBullet(*this);
+		return new ConcretePrototype1(*this);
 	}
 };
 
-class GoodBullet : public Bullet
+class ConcretePrototype2 : public Prototype
 {
 private:
 	float damage_area_;
 
 public:
-	GoodBullet(string bullet_name, float speed, float fire_power, float damage_power, float damage_area)
-		: Bullet(bullet_name, speed, fire_power), damage_area_(damage_area)
+	ConcretePrototype2(string bullet_name, float speed, float fire_power, float damage_power, float damage_area)
+		: Prototype(bullet_name, speed, fire_power), damage_area_(damage_area)
 	{
 	}
-	Bullet *Clone() const override
+	Prototype *Clone() const override
 	{
-		return new GoodBullet(*this);
+		return new ConcretePrototype2(*this);
 	}
 };
 
@@ -108,18 +107,18 @@ public:
  * RU: 
  */
 
-class BulletFactory
+class PrototypeFactory
 {
 
 private:
-	std::unordered_map<BulletType, Bullet *, std::hash<int>> bullets_;
+	std::unordered_map<Type, Prototype *, std::hash<int>> bullets_;
 
 public:
-	BulletFactory()
+	PrototypeFactory()
 	{
 
-		bullets_[BulletType::SIMPLE] = new SimpleBullet("Simple Bullet", 50.f, 75.f, 75.f);
-		bullets_[BulletType::GOOD] = new GoodBullet("Good Bullet", 60.f, 95.f, 95.f, 200.f);
+		bullets_[Type::SIMPLE] = new ConcretePrototype1("Simple Bullet", 50.f, 75.f, 75.f);
+		bullets_[Type::GOOD] = new ConcretePrototype2("Good Bullet", 60.f, 95.f, 95.f, 200.f);
 	}
 
 	/**
@@ -129,10 +128,10 @@ public:
      * RU: 
      */
 
-	~BulletFactory()
+	~PrototypeFactory()
 	{
-		delete bullets_[BulletType::SIMPLE];
-		delete bullets_[BulletType::GOOD];
+		delete bullets_[Type::SIMPLE];
+		delete bullets_[Type::GOOD];
 	}
 
 	/**
@@ -141,34 +140,34 @@ public:
      *
      * RU: 
      */
-	Bullet *CreateBullet(BulletType bulletType)
+	Prototype *CreateBullet(Type Type)
 	{
-		return bullets_[bulletType]->Clone();
+		return bullets_[Type]->Clone();
 	}
 };
 
-void Client(BulletFactory &bullet_factory)
+void Client(PrototypeFactory &bullet_factory)
 {
 
 	std::cout << "Let's create a simple bullet\n";
 
-	Bullet *bullet = bullet_factory.CreateBullet(BulletType::SIMPLE);
-	bullet->Fire(90);
-	delete bullet;
+	Prototype *prototype = bullet_factory.CreateBullet(Type::SIMPLE);
+	prototype->Fire(90);
+	delete prototype;
 
 	std::cout << "\n";
 
 	std::cout << "Let's create a Good bullet\n";
 
-	bullet = bullet_factory.CreateBullet(BulletType::GOOD);
-	bullet->Fire(10);
+	prototype = bullet_factory.CreateBullet(Type::GOOD);
+	prototype->Fire(10);
 
-	delete bullet;
+	delete prototype;
 }
 
 int main()
 {
-	BulletFactory *bullet_factory = new BulletFactory();
+	PrototypeFactory *bullet_factory = new PrototypeFactory();
 	Client(*bullet_factory);
 	delete bullet_factory;
 
