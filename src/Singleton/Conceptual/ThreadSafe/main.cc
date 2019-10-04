@@ -6,7 +6,6 @@
      */
 
 #include <iostream>
-#include <atomic>
 #include <mutex>
 
 /**
@@ -40,7 +39,7 @@ class Singleton
      * создание объекта через оператор new.
      */
 private:
-    static std::atomic<Singleton *> pinstance;
+    static Singleton * pinstance;
     static std::mutex mutex_;
 
 protected:
@@ -96,7 +95,7 @@ public:
      * RU: 
      */
 
-std::atomic<Singleton *> Singleton::pinstance{nullptr};
+Singleton* Singleton::pinstance{nullptr};
 std::mutex Singleton::mutex_;
 
 /**
