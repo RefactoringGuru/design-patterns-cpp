@@ -16,8 +16,8 @@ using std::string;
 
 enum Type
 {
-	SIMPLE = 0,
-	GOOD
+	PROTOTYPE_1 = 0,
+	PROTOTYPE_2
 };
 
 /**
@@ -31,28 +31,26 @@ enum Type
 class Prototype{
 
 protected:
-	string bullet_name_;
-	float speed_;
-	float fire_power_;
-	float direction_;
+	string prototype_name_;
+	float prototype_field_;
 
 public:
 	Prototype() {}
-	Prototype(string bullet_name, float speed, float fire_power)
-		: bullet_name_(bullet_name), speed_(speed), fire_power_(fire_power)
+	Prototype(string prototype_name)
+		: prototype_name_(prototype_name)
 	{
 	}
 	virtual ~Prototype() {}
 	virtual Prototype *Clone() const = 0;
-	virtual void Fire(float direction){
-		this->direction_ = direction;
-		std::cout << "fire "<< bullet_name_<<" with direction : " << direction << std::endl;
+	virtual void Method(float prototype_field){
+		this->prototype_field_ = prototype_field;
+		std::cout << "Call Method from "<< prototype_name_<<" with field : " << prototype_field << std::endl;
 	}
 };
 
 /**
- * EN: Simple Bullet is a Sub-Class of Bullet and implement the Clone Method
- * In this example all data members of Bullet Class are in the Stack. If you
+ * EN: ConcretePrototype1 is a Sub-Class of Prototype and implement the Clone Method
+ * In this example all data members of Prototype Class are in the Stack. If you
  * have pointers in your properties for ex: String* name_ ,you will need to
  * implement the Copy-Constructor to make sure you have a deep copy from the 
  * clone method
@@ -63,16 +61,16 @@ public:
 class ConcretePrototype1 : public Prototype
 {
 private:
-	float damage_power_;
+	float concrete_prototype_field1_;
 
 public:
-	ConcretePrototype1(string bullet_name, float speed, float fire_power, float damage_power)
-		: Prototype(bullet_name, speed / 2, fire_power), damage_power_(damage_power)
+	ConcretePrototype1(string prototype_name, float concrete_prototype_field)
+		: Prototype(prototype_name), concrete_prototype_field1_(concrete_prototype_field)
 	{
 	}
 
 	/**
-     * EN: Notice that Clone method return a Pointer to a new Bullet replica. so, the client
+     * EN: Notice that Clone method return a Pointer to a new ConcretePrototype1 replica. so, the client
      * (who call the clone method) has the responsability to free that memory. I you have
      * smart pointer knowledge you may prefer to use unique_pointer here.
      *
@@ -87,11 +85,11 @@ public:
 class ConcretePrototype2 : public Prototype
 {
 private:
-	float damage_area_;
+	float concrete_prototype_field2_;
 
 public:
-	ConcretePrototype2(string bullet_name, float speed, float fire_power, float damage_power, float damage_area)
-		: Prototype(bullet_name, speed, fire_power), damage_area_(damage_area)
+	ConcretePrototype2(string prototype_name, float concrete_prototype_field)
+		: Prototype(prototype_name), concrete_prototype_field2_(concrete_prototype_field)
 	{
 	}
 	Prototype *Clone() const override
@@ -101,8 +99,9 @@ public:
 };
 
 /**
- * EN: In Bullet Factory you have two protorypes of each bullet, so each time 
- * you want to create a bullet , you can use the existing ones and clone those.
+ * EN: In PrototypeFactory you have two concrete prototypes, one for each concrete 
+ * prototype class, so each time you want to create a bullet , 
+ * you can use the existing ones and clone those.
  *
  * RU: 
  */
@@ -111,14 +110,14 @@ class PrototypeFactory
 {
 
 private:
-	std::unordered_map<Type, Prototype *, std::hash<int>> bullets_;
+	std::unordered_map<Type, Prototype *, std::hash<int>> prototypes_;
 
 public:
 	PrototypeFactory()
 	{
 
-		bullets_[Type::SIMPLE] = new ConcretePrototype1("Simple Bullet", 50.f, 75.f, 75.f);
-		bullets_[Type::GOOD] = new ConcretePrototype2("Good Bullet", 60.f, 95.f, 95.f, 200.f);
+		prototypes_[Type::PROTOTYPE_1] = new ConcretePrototype1("PROTOTYPE_1 ", 50.f);
+		prototypes_[Type::PROTOTYPE_2] = new ConcretePrototype2("PROTOTYPE_2 ", 60.f);
 	}
 
 	/**
@@ -130,46 +129,46 @@ public:
 
 	~PrototypeFactory()
 	{
-		delete bullets_[Type::SIMPLE];
-		delete bullets_[Type::GOOD];
+		delete prototypes_[Type::PROTOTYPE_1];
+		delete prototypes_[Type::PROTOTYPE_2];
 	}
 
 	/**
-     * EN: Notice here that you just need to specify the type of the bullet you want and the method
+     * EN: Notice here that you just need to specify the type of the prototype you want and the method
      * will create from the object with this type.
      *
      * RU: 
      */
-	Prototype *CreateBullet(Type Type)
+	Prototype *CreatePrototype(Type type)
 	{
-		return bullets_[Type]->Clone();
+		return prototypes_[type]->Clone();
 	}
 };
 
-void Client(PrototypeFactory &bullet_factory)
+void Client(PrototypeFactory &prototype_factory)
 {
 
-	std::cout << "Let's create a simple bullet\n";
+	std::cout << "Let's create a Prototype 1\n";
 
-	Prototype *prototype = bullet_factory.CreateBullet(Type::SIMPLE);
-	prototype->Fire(90);
+	Prototype *prototype = prototype_factory.CreatePrototype(Type::PROTOTYPE_1);
+	prototype->Method(90);
 	delete prototype;
 
 	std::cout << "\n";
 
-	std::cout << "Let's create a Good bullet\n";
+	std::cout << "Let's create a Prototype 2 \n";
 
-	prototype = bullet_factory.CreateBullet(Type::GOOD);
-	prototype->Fire(10);
+	prototype = prototype_factory.CreatePrototype(Type::PROTOTYPE_2);
+	prototype->Method(10);
 
 	delete prototype;
 }
 
 int main()
 {
-	PrototypeFactory *bullet_factory = new PrototypeFactory();
-	Client(*bullet_factory);
-	delete bullet_factory;
+	PrototypeFactory *prototype_factory = new PrototypeFactory();
+	Client(*prototype_factory);
+	delete prototype_factory;
 
 	return 0;
 }
