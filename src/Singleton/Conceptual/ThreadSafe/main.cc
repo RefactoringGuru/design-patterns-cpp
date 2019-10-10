@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <mutex>
+#include <thread>
 
 /**
  * EN: Singleton Design Pattern
@@ -39,14 +40,15 @@ class Singleton
      * создание объекта через оператор new.
      */
 private:
-    static Singleton * pinstance;
+    static Singleton * pinstance_;
     static std::mutex mutex_;
 
 protected:
-    Singleton()
+    Singleton(const std::string value): value_(value)
     {
     }
     ~Singleton() {}
+    std::string value_;
 
 public:
     /**
@@ -75,7 +77,7 @@ public:
      *
      */
 
-    static Singleton *GetInstance();
+    static Singleton *GetInstance(const std::string& value);
     /**
      * EN: Finally, any singleton should define some business logic, which can
      * be executed on its instance.
@@ -87,6 +89,10 @@ public:
     {
         // ...
     }
+    
+    std::string value() const{
+        return value_;
+    } 
 };
 
 /**
@@ -95,7 +101,7 @@ public:
      * RU: 
      */
 
-Singleton* Singleton::pinstance{nullptr};
+Singleton* Singleton::pinstance_{nullptr};
 std::mutex Singleton::mutex_;
 
 /**
@@ -104,40 +110,46 @@ std::mutex Singleton::mutex_;
      *      set the value.
      * RU: 
      */
-Singleton *Singleton::GetInstance()
+Singleton *Singleton::GetInstance(const std::string& value)
 {
-    if (pinstance == nullptr)
+    if (pinstance_ == nullptr)
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        if (pinstance == nullptr)
+        if (pinstance_ == nullptr)
         {
-            pinstance = new Singleton;
+            pinstance_ = new Singleton(value);
         }
     }
-    return pinstance;
+    return pinstance_;
 }
 
-/**
- * EN: The client code.
- *
- * RU: Клиентский код.
- */
-void ClientCode()
-{
-    Singleton *s1 = Singleton::GetInstance();
-    Singleton *s2 = Singleton::GetInstance();
-    if (s1 == s2)
-    {
-        std::cout << "Singleton works, both variables contain the same instance.\n";
-    }
-    else
-    {
-        std::cout << "Singleton failed, variables contain different instances.\n";
-    }
+void ThreadFoo(){
+    // EN: Following code emulates slow initialization.
+    //
+    // RU: Этот код эмулирует медленную инициализацию.
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    Singleton* singleton = Singleton::GetInstance("FOO");
+    std::cout << singleton->value() << "\n";
+}
+
+void ThreadBar(){
+    // EN: Following code emulates slow initialization.
+    //
+    // RU: Этот код эмулирует медленную инициализацию.
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    Singleton* singleton = Singleton::GetInstance("BAR");
+    std::cout << singleton->value() << "\n";
 }
 
 int main()
-{
-    ClientCode();
+{   
+    std::cout <<"If you see the same value, then singleton was reused (yay!\n" <<
+                "If you see different values, then 2 singletons were created (booo!!)\n\n" <<
+                "RESULT:\n";   
+    std::thread t1(ThreadFoo);
+    std::thread t2(ThreadBar);
+    t1.join();
+    t2.join();
+    
     return 0;
 }

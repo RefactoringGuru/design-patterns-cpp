@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <thread>
 
 /**
  * EN: Singleton Design Pattern
@@ -32,11 +34,16 @@ class Singleton
      */
 
 protected:
-    Singleton()
+    Singleton(const std::string value): value_(value)
     {
     }
 
+    static Singleton* singleton_;
+
+    std::string value_;
+
 public:
+
     /**
      * EN: Singletons should not be cloneable.
      *
@@ -63,7 +70,7 @@ public:
      *
      */
 
-    static Singleton *GetInstance();
+    static Singleton *GetInstance(const std::string& value);
     /**
      * EN: Finally, any singleton should define some business logic, which can
      * be executed on its instance.
@@ -75,14 +82,20 @@ public:
     {
         // ...
     }
+
+    std::string value() const{
+        return value_;
+    } 
 };
+
+Singleton* Singleton::singleton_= nullptr;;
 
 /**
      * EN: Static methods should be defined outside the class.
      *
      * RU: 
      */
-Singleton *Singleton::GetInstance()
+Singleton *Singleton::GetInstance(const std::string& value)
 {
     /**
      * EN: This is a safer way to create an instance. instance = new Singleton is dangeruous 
@@ -90,31 +103,40 @@ Singleton *Singleton::GetInstance()
      *
      * RU: 
      */
-    static Singleton singleton;
-    return &singleton;
+    if(singleton_==nullptr){
+        singleton_ = new Singleton(value);
+    }
+    return singleton_;
 }
 
-/**
- * EN: The client code.
- *
- * RU: Клиентский код.
- */
-void ClientCode()
-{
-    Singleton *s1 = Singleton::GetInstance();
-    Singleton *s2 = Singleton::GetInstance();
-    if (s1 == s2)
-    {
-        std::cout << "Singleton works, both variables contain the same instance.\n";
-    }
-    else
-    {
-        std::cout << "Singleton failed, variables contain different instances.\n";
-    }
+void ThreadFoo(){
+    // EN: Following code emulates slow initialization.
+    //
+    // RU: Этот код эмулирует медленную инициализацию.
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    Singleton* singleton = Singleton::GetInstance("FOO");
+    std::cout << singleton->value() << "\n";
 }
+
+void ThreadBar(){
+    // EN: Following code emulates slow initialization.
+    //
+    // RU: Этот код эмулирует медленную инициализацию.
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    Singleton* singleton = Singleton::GetInstance("BAR");
+    std::cout << singleton->value() << "\n";
+}
+
 
 int main()
 {
-    ClientCode();
+    std::cout <<"If you see the same value, then singleton was reused (yay!\n" <<
+                "If you see different values, then 2 singletons were created (booo!!)\n\n" <<
+                "RESULT:\n";   
+    std::thread t1(ThreadFoo);
+    std::thread t2(ThreadBar);
+    t1.join();
+    t2.join();
+
     return 0;
 }
