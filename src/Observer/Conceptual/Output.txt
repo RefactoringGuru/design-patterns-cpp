@@ -1,0 +1,27 @@
+Hi, I'm the Observer "1".
+Hi, I'm the Observer "2".
+Hi, I'm the Observer "3".
+There are 3 observers in the list.
+Observer "1": a new message is available --> Hello World! :D
+Observer "2": a new message is available --> Hello World! :D
+Observer "3": a new message is available --> Hello World! :D
+Observer "3" removed from the list.
+There are 2 observers in the list.
+Observer "1": a new message is available --> The weather is hot today! :p
+Observer "2": a new message is available --> The weather is hot today! :p
+Hi, I'm the Observer "4".
+Observer "2" removed from the list.
+Hi, I'm the Observer "5".
+There are 3 observers in the list.
+Observer "1": a new message is available --> My new car is great! ;)
+Observer "4": a new message is available --> My new car is great! ;)
+Observer "5": a new message is available --> My new car is great! ;)
+Observer "5" removed from the list.
+Observer "4" removed from the list.
+Observer "1" removed from the list.
+Goodbye, I was the Observer "5".
+Goodbye, I was the Observer "4".
+Goodbye, I was the Observer "3".
+Goodbye, I was the Observer "2".
+Goodbye, I was the Observer "1".
+Goodbye, I was the Subject.
