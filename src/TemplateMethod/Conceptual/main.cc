@@ -27,50 +27,45 @@
  * Конкретные подклассы должны реализовать эти операции, но оставить сам
  * шаблонный метод без изменений.
  */
-class AbstractClass
-{
-    /**
+class AbstractClass {
+  /**
      * EN: The template method defines the skeleton of an algorithm.
      *
      * RU: Шаблонный метод определяет скелет алгоритма.
      */
-public:
-    void TemplateMethod() const
-    {
-        this->BaseOperation1();
-        this->RequiredOperations1();
-        this->BaseOperation2();
-        this->Hook1();
-        this->RequiredOperation2();
-        this->BaseOperation3();
-        this->Hook2();
-    }
-    /**
+ public:
+  void TemplateMethod() const {
+    this->BaseOperation1();
+    this->RequiredOperations1();
+    this->BaseOperation2();
+    this->Hook1();
+    this->RequiredOperation2();
+    this->BaseOperation3();
+    this->Hook2();
+  }
+  /**
      * EN: These operations already have implementations.
      *
      * RU: Эти операции уже имеют реализации.
      */
-protected:
-    void BaseOperation1() const
-    {
-        std::cout << "AbstractClass says: I am doing the bulk of the work\n";
-    }
-    void BaseOperation2() const
-    {
-        std::cout << "AbstractClass says: But I let subclasses override some operations\n";
-    }
-    void BaseOperation3() const
-    {
-        std::cout << "AbstractClass says: But I am doing the bulk of the work anyway\n";
-    }
-    /**
+ protected:
+  void BaseOperation1() const {
+    std::cout << "AbstractClass says: I am doing the bulk of the work\n";
+  }
+  void BaseOperation2() const {
+    std::cout << "AbstractClass says: But I let subclasses override some operations\n";
+  }
+  void BaseOperation3() const {
+    std::cout << "AbstractClass says: But I am doing the bulk of the work anyway\n";
+  }
+  /**
      * EN: These operations have to be implemented in subclasses.
      *
      * RU: А эти операции должны быть реализованы в подклассах.
      */
-    virtual void RequiredOperations1() const = 0;
-    virtual void RequiredOperation2() const = 0;
-    /**
+  virtual void RequiredOperations1() const = 0;
+  virtual void RequiredOperation2() const = 0;
+  /**
      * EN: These are "hooks." Subclasses may override them, but it's not
      * mandatory since the hooks already have default (but empty)
      * implementation. Hooks provide additional extension points in some crucial
@@ -81,8 +76,8 @@ protected:
      * предоставляют дополнительные точки расширения в некоторых критических
      * местах алгоритма.
      */
-    virtual void Hook1() const {}
-    virtual void Hook2() const {}
+  virtual void Hook1() const {}
+  virtual void Hook2() const {}
 };
 /**
  * EN: Concrete classes have to implement all abstract operations of the base
@@ -92,17 +87,14 @@ protected:
  * класса. Они также могут переопределить некоторые операции с реализацией по
  * умолчанию.
  */
-class ConcreteClass1 : public AbstractClass
-{
-protected:
-    void RequiredOperations1() const override
-    {
-        std::cout << "ConcreteClass1 says: Implemented Operation1\n";
-    }
-    void RequiredOperation2() const override
-    {
-        std::cout << "ConcreteClass1 says: Implemented Operation2\n";
-    }
+class ConcreteClass1 : public AbstractClass {
+ protected:
+  void RequiredOperations1() const override {
+    std::cout << "ConcreteClass1 says: Implemented Operation1\n";
+  }
+  void RequiredOperation2() const override {
+    std::cout << "ConcreteClass1 says: Implemented Operation2\n";
+  }
 };
 /**
  * EN: Usually, concrete classes override only a fraction of base class'
@@ -111,21 +103,17 @@ protected:
  * RU: Обычно конкретные классы переопределяют только часть операций базового
  * класса.
  */
-class ConcreteClass2 : public AbstractClass
-{
-protected:
-    void RequiredOperations1() const override
-    {
-        std::cout << "ConcreteClass2 says: Implemented Operation1\n";
-    }
-    void RequiredOperation2() const override
-    {
-        std::cout << "ConcreteClass2 says: Implemented Operation2\n";
-    }
-    void Hook1() const override
-    {
-        std::cout << "ConcreteClass2 says: Overridden Hook1\n";
-    }
+class ConcreteClass2 : public AbstractClass {
+ protected:
+  void RequiredOperations1() const override {
+    std::cout << "ConcreteClass2 says: Implemented Operation1\n";
+  }
+  void RequiredOperation2() const override {
+    std::cout << "ConcreteClass2 says: Implemented Operation2\n";
+  }
+  void Hook1() const override {
+    std::cout << "ConcreteClass2 says: Overridden Hook1\n";
+  }
 };
 /**
  * EN: The client code calls the template method to execute the algorithm.
@@ -137,23 +125,21 @@ protected:
  * Клиентский код не должен знать конкретный класс объекта, с которым работает,
  * при условии, что он работает с объектами через интерфейс их базового класса.
  */
-void ClientCode(AbstractClass *class_)
-{
-    // ...
-    class_->TemplateMethod();
-    // ...
+void ClientCode(AbstractClass *class_) {
+  // ...
+  class_->TemplateMethod();
+  // ...
 }
 
-int main()
-{
-    std::cout << "Same client code can work with different subclasses:\n";
-    ConcreteClass1 *concreteClass1 = new ConcreteClass1;
-    ClientCode(concreteClass1);
-    std::cout << "\n";
-    std::cout << "Same client code can work with different subclasses:\n";
-    ConcreteClass2 *concreteClass2 = new ConcreteClass2;
-    ClientCode(concreteClass2);
-    delete concreteClass1;
-    delete concreteClass2;
-    return 0;
+int main() {
+  std::cout << "Same client code can work with different subclasses:\n";
+  ConcreteClass1 *concreteClass1 = new ConcreteClass1;
+  ClientCode(concreteClass1);
+  std::cout << "\n";
+  std::cout << "Same client code can work with different subclasses:\n";
+  ConcreteClass2 *concreteClass2 = new ConcreteClass2;
+  ClientCode(concreteClass2);
+  delete concreteClass1;
+  delete concreteClass2;
+  return 0;
 }

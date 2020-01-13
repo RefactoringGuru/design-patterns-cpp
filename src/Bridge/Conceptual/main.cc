@@ -26,7 +26,6 @@
  *       Aa1 Aa2  Ab1 Ab2
  */
 
-
 /**
  * EN: The Implementation defines the interface for all implementation classes.
  * It doesn't have to match the Abstraction's interface. In fact, the two
@@ -41,13 +40,11 @@
  * определяет операции более высокого уровня, основанные на этих примитивах.
  */
 
-class Implementation
-{
-    public:
-    virtual ~Implementation(){}
-    virtual std::string OperationImplementation() const =0 ;
+class Implementation {
+ public:
+  virtual ~Implementation() {}
+  virtual std::string OperationImplementation() const = 0;
 };
-
 
 /**
  * EN: Each Concrete Implementation corresponds to a specific platform and
@@ -56,21 +53,17 @@ class Implementation
  * RU: Каждая Конкретная Реализация соответствует определённой платформе и
  * реализует интерфейс Реализации с использованием API этой платформы.
  */
-class ConcreteImplementationA: public Implementation
-{
-    public:
-    std::string OperationImplementation()const override
-    {
-        return "ConcreteImplementationA: Here's the result on the platform A.\n";
-    }
+class ConcreteImplementationA : public Implementation {
+ public:
+  std::string OperationImplementation() const override {
+    return "ConcreteImplementationA: Here's the result on the platform A.\n";
+  }
 };
-class ConcreteImplementationB: public Implementation
-{
-    public: 
-    std::string OperationImplementation()const override
-    {
-        return "ConcreteImplementationB: Here's the result on the platform B.\n";
-    }
+class ConcreteImplementationB : public Implementation {
+ public:
+  std::string OperationImplementation() const override {
+    return "ConcreteImplementationB: Here's the result on the platform B.\n";
+  }
 };
 
 /**
@@ -83,26 +76,24 @@ class ConcreteImplementationB: public Implementation
  * ему всю настоящую работу.
  */
 
-class Abstraction{
-    /**
+class Abstraction {
+  /**
      * @var Implementation
      */
-    protected:
-    Implementation* implementation_;
-    
-    public:
+ protected:
+  Implementation* implementation_;
 
-    Abstraction(Implementation* implementation):implementation_(implementation){
-    }
-    
-    virtual ~Abstraction(){
+ public:
+  Abstraction(Implementation* implementation) : implementation_(implementation) {
+  }
 
-    }
+  virtual ~Abstraction() {
+  }
 
-    virtual std::string Operation() const{
-        return "Abstraction: Base operation with:\n" + 
-            this->implementation_->OperationImplementation();
-    }
+  virtual std::string Operation() const {
+    return "Abstraction: Base operation with:\n" +
+           this->implementation_->OperationImplementation();
+  }
 };
 /**
  * EN: You can extend the Abstraction without changing the Implementation
@@ -110,20 +101,15 @@ class Abstraction{
  *
  * RU: Можно расширить Абстракцию без изменения классов Реализации.
  */
-class ExtendedAbstraction : public Abstraction
-{   
-    public: 
-
-    ExtendedAbstraction(Implementation* implementation): Abstraction(implementation){
-
-    }
-    std::string Operation() const override
-    {
-        return "ExtendedAbstraction: Extended operation with:\n" +
-            this->implementation_->OperationImplementation();
-    }
+class ExtendedAbstraction : public Abstraction {
+ public:
+  ExtendedAbstraction(Implementation* implementation) : Abstraction(implementation) {
+  }
+  std::string Operation() const override {
+    return "ExtendedAbstraction: Extended operation with:\n" +
+           this->implementation_->OperationImplementation();
+  }
 };
-
 
 /**
  * EN: Except for the initialization phase, where an Abstraction object gets
@@ -136,11 +122,10 @@ class ExtendedAbstraction : public Abstraction
  * класса Абстракции. Таким образом, клиентский код может поддерживать любую
  * комбинацию абстракции и реализации.
  */
-void ClientCode(const Abstraction& abstraction)
-{
-    // ...
-    std::cout <<  abstraction.Operation();
-    // ...
+void ClientCode(const Abstraction& abstraction) {
+  // ...
+  std::cout << abstraction.Operation();
+  // ...
 }
 /**
  * EN: The client code should be able to work with any pre-configured
@@ -150,22 +135,20 @@ void ClientCode(const Abstraction& abstraction)
  * комбинацией абстракции и реализации.
  */
 
-int main(){
+int main() {
+  Implementation* implementation = new ConcreteImplementationA;
+  Abstraction* abstraction = new Abstraction(implementation);
+  ClientCode(*abstraction);
+  std::cout << std::endl;
+  delete implementation;
+  delete abstraction;
 
-    Implementation* implementation = new ConcreteImplementationA;
-    Abstraction* abstraction = new Abstraction(implementation);
-    ClientCode(*abstraction);
-    std::cout << std::endl;
-    delete implementation;
-    delete abstraction;
+  implementation = new ConcreteImplementationB;
+  abstraction = new ExtendedAbstraction(implementation);
+  ClientCode(*abstraction);
 
-    implementation = new ConcreteImplementationB;
-    abstraction = new ExtendedAbstraction(implementation);
-    ClientCode(*abstraction);
+  delete implementation;
+  delete abstraction;
 
-    delete implementation;
-    delete abstraction;
-
-    return 0;
+  return 0;
 }
-

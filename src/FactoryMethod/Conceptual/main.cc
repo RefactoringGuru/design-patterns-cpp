@@ -1,5 +1,5 @@
-#include <string>
 #include <iostream>
+#include <string>
 
 /**
  * EN: Factory Method Design Pattern
@@ -13,7 +13,6 @@
  * позволяя подклассам изменять тип создаваемых объектов.
  */
 
-
 /**
  * EN: The Product interface declares the operations that all concrete products
  * must implement.
@@ -22,10 +21,10 @@
  * конкретные продукты.
  */
 
-class Product{
-    public:
-    virtual ~Product(){}
-    virtual std::string Operation() const =0; 
+class Product {
+ public:
+  virtual ~Product() {}
+  virtual std::string Operation() const = 0;
 };
 
 /**
@@ -35,22 +34,18 @@ class Product{
  * RU: Конкретные Продукты предоставляют различные реализации интерфейса
  * Продукта.
  */
-class ConcreteProduct1 : public Product{
-    
-    public:
-
-    std::string Operation() const override {
-        return "{Result of the ConcreteProduct1}";
-    }
+class ConcreteProduct1 : public Product {
+ public:
+  std::string Operation() const override {
+    return "{Result of the ConcreteProduct1}";
+  }
 };
-class ConcreteProduct2 : public Product{
-    public:
-
-    std::string Operation() const override {
-        return "{Result of the ConcreteProduct2}";
-    }
+class ConcreteProduct2 : public Product {
+ public:
+  std::string Operation() const override {
+    return "{Result of the ConcreteProduct2}";
+  }
 };
-
 
 /**
  * EN: The Creator class declares the factory method that is supposed to return
@@ -62,18 +57,18 @@ class ConcreteProduct2 : public Product{
  * этого метода.
  */
 
-class Creator{
-    /**
+class Creator {
+  /**
      * EN: Note that the Creator may also provide some default implementation of
      * the factory method.
      *
      * RU: Обратите внимание, что Создатель может также обеспечить реализацию
      * фабричного метода по умолчанию.
      */
-    public:
-    virtual ~Creator(){};
-    virtual Product* FactoryMethod() const=0 ;
-    /**
+ public:
+  virtual ~Creator(){};
+  virtual Product* FactoryMethod() const = 0;
+  /**
      * EN: Also note that, despite its name, the Creator's primary
      * responsibility is not creating products. Usually, it contains some core
      * business logic that relies on Product objects, returned by the factory
@@ -89,24 +84,19 @@ class Creator{
      * тип продукта.
      */
 
-    std::string SomeOperation() const {
-        // EN: Call the factory method to create a Product object.
-        //
-        // RU: Вызываем фабричный метод, чтобы получить объект-продукт.
-        Product* product= this->FactoryMethod();
-        // EN: Now, use the product.
-        //
-        // RU: Далее, работаем с этим продуктом.
-        std::string result= "Creator: The same creator's code has just worked with "+ product->Operation();
-        delete product;
-        return result;
-    }
+  std::string SomeOperation() const {
+    // EN: Call the factory method to create a Product object.
+    //
+    // RU: Вызываем фабричный метод, чтобы получить объект-продукт.
+    Product* product = this->FactoryMethod();
+    // EN: Now, use the product.
+    //
+    // RU: Далее, работаем с этим продуктом.
+    std::string result = "Creator: The same creator's code has just worked with " + product->Operation();
+    delete product;
+    return result;
+  }
 };
-
-
-
-
-
 
 /**
  * EN: Concrete Creators override the factory method in order to change the
@@ -115,8 +105,8 @@ class Creator{
  * RU: Конкретные Создатели переопределяют фабричный метод для того, чтобы
  * изменить тип результирующего продукта.
  */
-class ConcreteCreator1: public Creator{
-    /**
+class ConcreteCreator1 : public Creator {
+  /**
      * EN: Note that the signature of the method still uses the abstract product
      * type, even though the concrete product is actually returned from the
      * method. This way the Creator can stay independent of concrete product
@@ -127,20 +117,17 @@ class ConcreteCreator1: public Creator{
      * продукт. Таким образом, Создатель может оставаться независимым от
      * конкретных классов продуктов.
      */
-    public:
-
-    Product* FactoryMethod() const override {
-        return new ConcreteProduct1();
-    }
+ public:
+  Product* FactoryMethod() const override {
+    return new ConcreteProduct1();
+  }
 };
 
-class ConcreteCreator2: public Creator
-{
-    public:
-
-    Product* FactoryMethod() const override{
-        return new ConcreteProduct2();
-    }
+class ConcreteCreator2 : public Creator {
+ public:
+  Product* FactoryMethod() const override {
+    return new ConcreteProduct2();
+  }
 };
 
 /**
@@ -152,12 +139,11 @@ class ConcreteCreator2: public Creator
  * его базовый интерфейс. Пока клиент продолжает работать с создателем через
  * базовый интерфейс, вы можете передать ему любой подкласс создателя.
  */
-void ClientCode(const Creator& creator)
-{
-    // ...
-    std::cout << "Client: I'm not aware of the creator's class, but it still works.\n"
-        << creator.SomeOperation()<<std::endl;
-    // ...
+void ClientCode(const Creator& creator) {
+  // ...
+  std::cout << "Client: I'm not aware of the creator's class, but it still works.\n"
+            << creator.SomeOperation() << std::endl;
+  // ...
 }
 
 /**
@@ -168,17 +154,16 @@ void ClientCode(const Creator& creator)
  * среды.
  */
 
-int main(){
+int main() {
+  std::cout << "App: Launched with the ConcreteCreator1.\n";
+  Creator* creator = new ConcreteCreator1();
+  ClientCode(*creator);
+  std::cout << std::endl;
+  std::cout << "App: Launched with the ConcreteCreator2.\n";
+  Creator* creator2 = new ConcreteCreator2();
+  ClientCode(*creator2);
 
-    std::cout << "App: Launched with the ConcreteCreator1.\n";
-    Creator* creator= new ConcreteCreator1();
-    ClientCode(*creator);
-    std::cout << std::endl;
-    std::cout << "App: Launched with the ConcreteCreator2.\n";
-    Creator* creator2= new ConcreteCreator2();
-    ClientCode(*creator2);
-
-    delete creator;
-    delete creator2;    
-    return 0;
+  delete creator;
+  delete creator2;
+  return 0;
 }

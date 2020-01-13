@@ -1,6 +1,6 @@
+#include <array>
 #include <iostream>
 #include <string>
-#include <array>
 
 /**
  * EN: Visitor Design Pattern
@@ -25,11 +25,10 @@
 class ConcreteComponentA;
 class ConcreteComponentB;
 
-class Visitor
-{
-public:
-    virtual void VisitConcreteComponentA(const ConcreteComponentA *element) const = 0;
-    virtual void VisitConcreteComponentB(const ConcreteComponentB *element) const = 0;
+class Visitor {
+ public:
+  virtual void VisitConcreteComponentA(const ConcreteComponentA *element) const = 0;
+  virtual void VisitConcreteComponentB(const ConcreteComponentB *element) const = 0;
 };
 
 /**
@@ -40,11 +39,10 @@ public:
  * может получать любой объект, реализующий интерфейс посетителя.
  */
 
-class Component
-{
-public:
-    virtual ~Component() {}
-    virtual void Accept(Visitor *visitor) const = 0;
+class Component {
+ public:
+  virtual ~Component() {}
+  virtual void Accept(Visitor *visitor) const = 0;
 };
 
 /**
@@ -55,9 +53,8 @@ public:
  * образом, чтобы он вызывал метод посетителя, соответствующий классу
  * компонента.
  */
-class ConcreteComponentA : public Component
-{
-    /**
+class ConcreteComponentA : public Component {
+  /**
      * EN: Note that we're calling `visitConcreteComponentA`, which matches the
      * current class name. This way we let the visitor know the class of the
      * component it works with.
@@ -66,12 +63,11 @@ class ConcreteComponentA : public Component
      * соответствует названию текущего класса. Таким образом мы позволяем
      * посетителю узнать, с каким классом компонента он работает.
      */
-public:
-    void Accept(Visitor *visitor) const override
-    {
-        visitor->VisitConcreteComponentA(this);
-    }
-    /**
+ public:
+  void Accept(Visitor *visitor) const override {
+    visitor->VisitConcreteComponentA(this);
+  }
+  /**
      * EN: Concrete Components may have special methods that don't exist in
      * their base class or interface. The Visitor is still able to use these
      * methods since it's aware of the component's concrete class.
@@ -80,28 +76,24 @@ public:
      * базовом классе или интерфейсе. Посетитель всё же может использовать эти
      * методы, поскольку он знает о конкретном классе компонента.
      */
-    std::string ExclusiveMethodOfConcreteComponentA() const
-    {
-        return "A";
-    }
+  std::string ExclusiveMethodOfConcreteComponentA() const {
+    return "A";
+  }
 };
 
-class ConcreteComponentB : public Component
-{
-    /**
+class ConcreteComponentB : public Component {
+  /**
      * EN: Same here: visitConcreteComponentB => ConcreteComponentB
      *
      * RU: То же самое здесь: visitConcreteComponentB => ConcreteComponentB
      */
-public:
-    void Accept(Visitor *visitor) const override
-    {
-        visitor->VisitConcreteComponentB(this);
-    }
-    std::string SpecialMethodOfConcreteComponentB() const
-    {
-        return "B";
-    }
+ public:
+  void Accept(Visitor *visitor) const override {
+    visitor->VisitConcreteComponentB(this);
+  }
+  std::string SpecialMethodOfConcreteComponentB() const {
+    return "B";
+  }
 };
 
 /**
@@ -121,31 +113,25 @@ public:
  * было бы полезно хранить некоторое промежуточное состояние алгоритма при
  * выполнении методов посетителя над различными объектами структуры.
  */
-class ConcreteVisitor1 : public Visitor
-{
-public:
-    void VisitConcreteComponentA(const ConcreteComponentA *element) const override
-    {
-        std::cout << element->ExclusiveMethodOfConcreteComponentA() << " + ConcreteVisitor1\n";
-    }
+class ConcreteVisitor1 : public Visitor {
+ public:
+  void VisitConcreteComponentA(const ConcreteComponentA *element) const override {
+    std::cout << element->ExclusiveMethodOfConcreteComponentA() << " + ConcreteVisitor1\n";
+  }
 
-    void VisitConcreteComponentB(const ConcreteComponentB *element) const override
-    {
-        std::cout << element->SpecialMethodOfConcreteComponentB() << " + ConcreteVisitor1\n";
-    }
+  void VisitConcreteComponentB(const ConcreteComponentB *element) const override {
+    std::cout << element->SpecialMethodOfConcreteComponentB() << " + ConcreteVisitor1\n";
+  }
 };
 
-class ConcreteVisitor2 : public Visitor
-{
-public:
-    void VisitConcreteComponentA(const ConcreteComponentA *element) const override
-    {
-        std::cout << element->ExclusiveMethodOfConcreteComponentA() << " + ConcreteVisitor2\n";
-    }
-    void VisitConcreteComponentB(const ConcreteComponentB *element) const override
-    {
-        std::cout << element->SpecialMethodOfConcreteComponentB() << " + ConcreteVisitor2\n";
-    }
+class ConcreteVisitor2 : public Visitor {
+ public:
+  void VisitConcreteComponentA(const ConcreteComponentA *element) const override {
+    std::cout << element->ExclusiveMethodOfConcreteComponentA() << " + ConcreteVisitor2\n";
+  }
+  void VisitConcreteComponentB(const ConcreteComponentB *element) const override {
+    std::cout << element->SpecialMethodOfConcreteComponentB() << " + ConcreteVisitor2\n";
+  }
 };
 /**
  * EN: The client code can run visitor operations over any set of elements
@@ -156,33 +142,29 @@ public:
  * элементов, не выясняя их конкретных классов. Операция принятия направляет
  * вызов к соответствующей операции в объекте посетителя.
  */
-void ClientCode(std::array<const Component *, 2> components, Visitor *visitor)
-{
-    // ...
-    for (const Component *comp : components)
-    {
-        comp->Accept(visitor);
-    }
-    // ...
+void ClientCode(std::array<const Component *, 2> components, Visitor *visitor) {
+  // ...
+  for (const Component *comp : components) {
+    comp->Accept(visitor);
+  }
+  // ...
 }
 
-int main()
-{
-    std::array<const Component *, 2> components = {new ConcreteComponentA, new ConcreteComponentB};
-    std::cout << "The client code works with all visitors via the base Visitor interface:\n";
-    ConcreteVisitor1 *visitor1 = new ConcreteVisitor1;
-    ClientCode(components, visitor1);
-    std::cout << "\n";
-    std::cout << "It allows the same client code to work with different types of visitors:\n";
-    ConcreteVisitor2 *visitor2 = new ConcreteVisitor2;
-    ClientCode(components, visitor2);
+int main() {
+  std::array<const Component *, 2> components = {new ConcreteComponentA, new ConcreteComponentB};
+  std::cout << "The client code works with all visitors via the base Visitor interface:\n";
+  ConcreteVisitor1 *visitor1 = new ConcreteVisitor1;
+  ClientCode(components, visitor1);
+  std::cout << "\n";
+  std::cout << "It allows the same client code to work with different types of visitors:\n";
+  ConcreteVisitor2 *visitor2 = new ConcreteVisitor2;
+  ClientCode(components, visitor2);
 
-    for (const Component *comp : components)
-    {
-        delete comp;
-    }
-    delete visitor1;
-    delete visitor2;
+  for (const Component *comp : components) {
+    delete comp;
+  }
+  delete visitor1;
+  delete visitor2;
 
-    return 0;
+  return 0;
 }

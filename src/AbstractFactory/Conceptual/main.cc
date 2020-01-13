@@ -22,7 +22,7 @@
 */
 class AbstractProductA {
  public:
-  virtual ~AbstractProductA() {};
+  virtual ~AbstractProductA(){};
   virtual std::string UsefulFunctionA() const = 0;
 };
 
@@ -60,7 +60,7 @@ class AbstractProductB {
    * RU: Продукт B способен работать самостоятельно...
    */
  public:
-  virtual ~AbstractProductB() {};
+  virtual ~AbstractProductB(){};
   virtual std::string UsefulFunctionB() const = 0;
   /**
    * EN: ...but it also can collaborate with the ProductA.

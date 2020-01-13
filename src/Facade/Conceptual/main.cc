@@ -22,36 +22,30 @@
  * напрямую. В любом случае, для Подсистемы Фасад – это еще один клиент, и он не
  * является частью Подсистемы.
  */
-class Subsystem1
-{
-public:
-    std::string Operation1() const
-    {
-        return "Subsystem1: Ready!\n";
-    }
-    // ...
-    std::string OperationN() const
-    {
-        return "Subsystem1: Go!\n";
-    }
+class Subsystem1 {
+ public:
+  std::string Operation1() const {
+    return "Subsystem1: Ready!\n";
+  }
+  // ...
+  std::string OperationN() const {
+    return "Subsystem1: Go!\n";
+  }
 };
 /**
  * EN: Some facades can work with multiple subsystems at the same time.
  *
  * RU: Некоторые фасады могут работать с разными подсистемами одновременно.
  */
-class Subsystem2
-{
-public:
-    std::string Operation1() const
-    {
-        return "Subsystem2: Get ready!\n";
-    }
-    // ...
-    std::string OperationZ() const
-    {
-        return "Subsystem2: Fire!\n";
-    }
+class Subsystem2 {
+ public:
+  std::string Operation1() const {
+    return "Subsystem2: Get ready!\n";
+  }
+  // ...
+  std::string OperationZ() const {
+    return "Subsystem2: Fire!\n";
+  }
 };
 
 /**
@@ -66,12 +60,11 @@ public:
  * объектам внутри подсистемы. Фасад также отвечает за управление их жизненным
  * циклом. Все это защищает клиента от нежелательной сложности подсистемы.
  */
-class Facade
-{
-protected:
-    Subsystem1 *subsystem1_;
-    Subsystem2 *subsystem2_;
-    /**
+class Facade {
+ protected:
+  Subsystem1 *subsystem1_;
+  Subsystem2 *subsystem2_;
+  /**
      * EN: Depending on your application's needs, you can provide the Facade
      * with existing subsystem objects or force the Facade to create them on its
      * own.
@@ -80,25 +73,23 @@ protected:
      * предоставить Фасаду существующие объекты подсистемы или заставить Фасад
      * создать их самостоятельно.
      */
-public:
-    /**
+ public:
+  /**
      * EN: In this case we will delegate the memory ownership to Facade Class
      *
      * RU: 
      */
-    Facade(
-        Subsystem1 *subsystem1 = nullptr,
-        Subsystem2 *subsystem2 = nullptr)
-    {
-        this->subsystem1_ = subsystem1 ?: new Subsystem1;
-        this->subsystem2_ = subsystem2 ?: new Subsystem2;
-    }
-    ~Facade()
-    {
-        delete subsystem1_;
-        delete subsystem2_;
-    }
-    /**
+  Facade(
+      Subsystem1 *subsystem1 = nullptr,
+      Subsystem2 *subsystem2 = nullptr) {
+    this->subsystem1_ = subsystem1 ?: new Subsystem1;
+    this->subsystem2_ = subsystem2 ?: new Subsystem2;
+  }
+  ~Facade() {
+    delete subsystem1_;
+    delete subsystem2_;
+  }
+  /**
      * EN: The Facade's methods are convenient shortcuts to the sophisticated
      * functionality of the subsystems. However, clients get only to a fraction
      * of a subsystem's capabilities.
@@ -106,16 +97,15 @@ public:
      * RU: Методы Фасада удобны для быстрого доступа к сложной функциональности
      * подсистем. Однако клиенты получают только часть возможностей подсистемы.
      */
-    std::string Operation()
-    {
-        std::string result = "Facade initializes subsystems:\n";
-        result += this->subsystem1_->Operation1();
-        result += this->subsystem2_->Operation1();
-        result += "Facade orders subsystems to perform the action:\n";
-        result += this->subsystem1_->OperationN();
-        result += this->subsystem2_->OperationZ();
-        return result;
-    }
+  std::string Operation() {
+    std::string result = "Facade initializes subsystems:\n";
+    result += this->subsystem1_->Operation1();
+    result += this->subsystem2_->Operation1();
+    result += "Facade orders subsystems to perform the action:\n";
+    result += this->subsystem1_->OperationN();
+    result += this->subsystem2_->OperationZ();
+    return result;
+  }
 };
 
 /**
@@ -129,11 +119,10 @@ public:
  * клиент может даже не знать о существовании подсистемы. Такой подход позволяет
  * держать сложность под контролем.
  */
-void ClientCode(Facade *facade)
-{
-    // ...
-    std::cout << facade->Operation();
-    // ...
+void ClientCode(Facade *facade) {
+  // ...
+  std::cout << facade->Operation();
+  // ...
 }
 /**
  * EN: The client code may have some of the subsystem's objects already created.
@@ -145,15 +134,13 @@ void ClientCode(Facade *facade)
  * объектами вместо того, чтобы позволить Фасаду создавать новые экземпляры.
  */
 
-int main()
-{
+int main() {
+  Subsystem1 *subsystem1 = new Subsystem1;
+  Subsystem2 *subsystem2 = new Subsystem2;
+  Facade *facade = new Facade(subsystem1, subsystem2);
+  ClientCode(facade);
 
-    Subsystem1 *subsystem1 = new Subsystem1;
-    Subsystem2 *subsystem2 = new Subsystem2;
-    Facade *facade = new Facade(subsystem1, subsystem2);
-    ClientCode(facade);
+  delete facade;
 
-    delete facade;
-
-    return 0;
+  return 0;
 }

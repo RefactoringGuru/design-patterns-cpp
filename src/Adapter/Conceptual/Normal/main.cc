@@ -1,6 +1,6 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
-#include <algorithm>
 
 /**
  * EN: Adapter Design Pattern

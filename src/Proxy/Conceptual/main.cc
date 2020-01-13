@@ -21,10 +21,9 @@
  * этот интерфейс, вы сможете передать ему заместителя вместо реального
  * субъекта.
  */
-class Subject
-{
-public:
-    virtual void Request() const = 0;
+class Subject {
+ public:
+  virtual void Request() const = 0;
 };
 /**
  * EN: The RealSubject contains some core business logic. Usually, RealSubjects
@@ -38,57 +37,50 @@ public:
  * данных. Заместитель может решить эти задачи без каких-либо изменений в коде
  * Реального Субъекта.
  */
-class RealSubject : public Subject
-{
-public:
-    void Request() const override
-    {
-        std::cout << "RealSubject: Handling request.\n";
-    }
+class RealSubject : public Subject {
+ public:
+  void Request() const override {
+    std::cout << "RealSubject: Handling request.\n";
+  }
 };
 /**
  * EN: The Proxy has an interface identical to the RealSubject.
  *
  * RU: Интерфейс Заместителя идентичен интерфейсу Реального Субъекта.
  */
-class Proxy : public Subject
-{
-    /**
+class Proxy : public Subject {
+  /**
      * @var RealSubject
      */
-private:
-    RealSubject *real_subject_;
+ private:
+  RealSubject *real_subject_;
 
-    bool CheckAccess() const
-    {
-        // EN: Some real checks should go here.
-        //
-        // RU: Некоторые реальные проверки должны проходить здесь.
-        std::cout << "Proxy: Checking access prior to firing a real request.\n";
-        return true;
-    }
-    void LogAccess() const
-    {
-        std::cout << "Proxy: Logging the time of request.\n";
-    }
+  bool CheckAccess() const {
+    // EN: Some real checks should go here.
+    //
+    // RU: Некоторые реальные проверки должны проходить здесь.
+    std::cout << "Proxy: Checking access prior to firing a real request.\n";
+    return true;
+  }
+  void LogAccess() const {
+    std::cout << "Proxy: Logging the time of request.\n";
+  }
 
-    /**
+  /**
      * EN: The Proxy maintains a reference to an object of the RealSubject
      * class. It can be either lazy-loaded or passed to the Proxy by the client.
      *
      * RU: Заместитель хранит ссылку на объект класса РеальныйСубъект. Клиент
      * может либо лениво загрузить его, либо передать Заместителю.
      */
-public:
-    Proxy(RealSubject *real_subject) : real_subject_(new RealSubject(*real_subject))
-    {
-    }
+ public:
+  Proxy(RealSubject *real_subject) : real_subject_(new RealSubject(*real_subject)) {
+  }
 
-    ~Proxy()
-    {
-        delete real_subject_;
-    }
-    /**
+  ~Proxy() {
+    delete real_subject_;
+  }
+  /**
      * EN: The most common applications of the Proxy pattern are lazy loading,
      * caching, controlling the access, logging, etc. A Proxy can perform one of
      * these things and then, depending on the result, pass the execution to the
@@ -100,14 +92,12 @@ public:
      * зависимости от результата, передать выполнение одноимённому методу в
      * связанном объекте класса Реального Субъект.
      */
-    void Request() const override
-    {
-        if (this->CheckAccess())
-        {
-            this->real_subject_->Request();
-            this->LogAccess();
-        }
+  void Request() const override {
+    if (this->CheckAccess()) {
+      this->real_subject_->Request();
+      this->LogAccess();
     }
+  }
 };
 /**
  * EN: The client code is supposed to work with all objects (both subjects and
@@ -123,24 +113,22 @@ public:
  * реализации паттерна, можно расширить заместителя из класса реального
  * субъекта.
  */
-void ClientCode(const Subject &subject)
-{
-    // ...
-    subject.Request();
-    // ...
+void ClientCode(const Subject &subject) {
+  // ...
+  subject.Request();
+  // ...
 }
 
-int main()
-{
-    std::cout << "Client: Executing the client code with a real subject:\n";
-    RealSubject *real_subject = new RealSubject;
-    ClientCode(*real_subject);
-    std::cout << "\n";
-    std::cout << "Client: Executing the same client code with a proxy:\n";
-    Proxy *proxy = new Proxy(real_subject);
-    ClientCode(*proxy);
+int main() {
+  std::cout << "Client: Executing the client code with a real subject:\n";
+  RealSubject *real_subject = new RealSubject;
+  ClientCode(*real_subject);
+  std::cout << "\n";
+  std::cout << "Client: Executing the same client code with a proxy:\n";
+  Proxy *proxy = new Proxy(real_subject);
+  ClientCode(*proxy);
 
-    delete real_subject;
-    delete proxy;
-    return 0;
+  delete real_subject;
+  delete proxy;
+  return 0;
 }
