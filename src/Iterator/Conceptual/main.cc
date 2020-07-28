@@ -122,6 +122,8 @@ void ClientCode() {
   for (it2->First(); !it2->IsDone(); it2->Next()) {
     std::cout << it2->Current()->data() << std::endl;
   }
+  delete it;
+  delete it2;
 }
 
 int main() {
