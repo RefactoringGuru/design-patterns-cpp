@@ -167,7 +167,7 @@ void AddCarToPoliceDatabase(
     //
     // RU: Клиентский код либо сохраняет, либо вычисляет внешнее состояние и
     // передает его методам легковеса.
-    flyweight.Operation({plates, owner});
+    flyweight.Operation({owner, plates});
 }
 
 /**
