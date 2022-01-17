@@ -58,8 +58,8 @@ class Component {
      * во время сборки дерева объектов. Недостаток такого подхода в том, что эти
      * методы будут пустыми для компонентов уровня листа.
      */
-  virtual void Add(Component *component) {}
-  virtual void Remove(Component *component) {}
+  virtual void Add(Component *) {}
+  virtual void Remove(Component *) {}
   /**
      * EN: You can provide a method that lets the client code figure out whether
      * a component can bear children.

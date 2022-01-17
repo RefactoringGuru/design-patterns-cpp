@@ -74,6 +74,11 @@ class ConcretePrototype1 : public Prototype {
   Prototype *Clone() const override {
     return new ConcretePrototype1(*this);
   }
+
+  void Method(float prototype_field) override {
+    Prototype::Method(prototype_field);
+    std::cout << "My private data is " << concrete_prototype_field1_ << "\n";
+  }
 };
 
 class ConcretePrototype2 : public Prototype {
@@ -86,6 +91,11 @@ class ConcretePrototype2 : public Prototype {
   }
   Prototype *Clone() const override {
     return new ConcretePrototype2(*this);
+  }
+  
+  void Method(float prototype_field) override {
+    Prototype::Method(prototype_field);
+    std::cout << "My private data is " << concrete_prototype_field2_ << "\n";
   }
 };
 
