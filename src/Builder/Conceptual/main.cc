@@ -181,7 +181,7 @@ class Director{
      * @var Builder
      */
     private:
-    Builder* builder;
+    Builder* builder_;
     /**
      * EN: The Director works with any builder instance that the client code
      * passes to it. This way, the client code may alter the final type of the
@@ -195,7 +195,7 @@ class Director{
     public:
 
     void set_builder(Builder* builder){
-        this->builder=builder;
+        this->builder_=builder;
     }
 
     /**
@@ -207,13 +207,13 @@ class Director{
      */
 
     void BuildMinimalViableProduct(){
-        this->builder->ProducePartA();
+        this->builder_->ProducePartA();
     }
     
     void BuildFullFeaturedProduct(){
-        this->builder->ProducePartA();
-        this->builder->ProducePartB();
-        this->builder->ProducePartC();
+        this->builder_->ProducePartA();
+        this->builder_->ProducePartB();
+        this->builder_->ProducePartC();
     }
 };
 /**

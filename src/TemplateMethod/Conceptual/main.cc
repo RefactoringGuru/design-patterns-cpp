@@ -34,6 +34,7 @@ class AbstractClass {
      * RU: Шаблонный метод определяет скелет алгоритма.
      */
  public:
+  virtual ~AbstractClass() = default;
   void TemplateMethod() const {
     this->BaseOperation1();
     this->RequiredOperations1();

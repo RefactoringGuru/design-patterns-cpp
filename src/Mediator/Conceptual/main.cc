@@ -26,6 +26,7 @@
 class BaseComponent;
 class Mediator {
  public:
+  virtual ~Mediator() = default;
   virtual void Notify(BaseComponent *sender, std::string event) const = 0;
 };
 
@@ -97,7 +98,7 @@ class ConcreteMediator : public Mediator {
     this->component1_->set_mediator(this);
     this->component2_->set_mediator(this);
   }
-  void Notify(BaseComponent *sender, std::string event) const override {
+  void Notify(BaseComponent *, std::string event) const override {
     if (event == "A") {
       std::cout << "Mediator reacts on A and triggers following operations:\n";
       this->component2_->DoC();

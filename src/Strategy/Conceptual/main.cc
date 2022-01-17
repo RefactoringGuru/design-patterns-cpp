@@ -129,7 +129,7 @@ class ConcreteStrategyB : public Strategy
             result += letter;
         });
         std::sort(std::begin(result), std::end(result));
-        for (int i = 0; i < result.size() / 2; i++)
+        for (unsigned i = 0; i < result.size() / 2; i++)
         {
             std::swap(result[i], result[result.size() - i - 1]);
         }

@@ -27,6 +27,7 @@ class ConcreteComponentB;
 
 class Visitor {
  public:
+  virtual ~Visitor() = default;
   virtual void VisitConcreteComponentA(const ConcreteComponentA *element) const = 0;
   virtual void VisitConcreteComponentB(const ConcreteComponentB *element) const = 0;
 };
