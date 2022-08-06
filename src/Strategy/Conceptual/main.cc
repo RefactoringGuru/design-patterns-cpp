@@ -32,8 +32,8 @@
 class Strategy
 {
 public:
-    virtual ~Strategy() {}
-    virtual std::string DoAlgorithm(const std::vector<std::string> &data) const = 0;
+    virtual ~Strategy() = default;
+    virtual std::string doAlgorithm(std::string_view data) const = 0;
 };
 
 /**
@@ -54,7 +54,7 @@ class Context
      * всеми стратегиями через интерфейс Стратегии.
      */
 private:
-    Strategy *strategy_;
+    std::unique_ptr<Strategy> strategy_;
     /**
      * 
      * EN: Usually, the Context accepts a strategy through the constructor, but
@@ -64,12 +64,8 @@ private:
      * предоставляет сеттер для её изменения во время выполнения.
      */
 public:
-    Context(Strategy *strategy = nullptr) : strategy_(strategy)
+    explicit Context(std::unique_ptr<Strategy> &&strategy = {}) : strategy_(std::move(strategy))
     {
-    }
-    ~Context()
-    {
-        delete this->strategy_;
     }
     /**
      * EN: Usually, the Context allows replacing a Strategy object at runtime.
@@ -77,10 +73,9 @@ public:
      * RU: Обычно Контекст позволяет заменить объект Стратегии во время
      * выполнения.
      */
-    void set_strategy(Strategy *strategy)
+    void set_strategy(std::unique_ptr<Strategy> &&strategy)
     {
-        delete this->strategy_;
-        this->strategy_ = strategy;
+        strategy_ = std::move(strategy);
     }
     /**
      * EN: The Context delegates some work to the Strategy object instead of
@@ -89,13 +84,15 @@ public:
      * RU: Вместо того, чтобы самостоятельно реализовывать множественные версии
      * алгоритма, Контекст делегирует некоторую работу объекту Стратегии.
      */
-    void DoSomeBusinessLogic() const
+    void doSomeBusinessLogic() const
     {
-        // ...
-        std::cout << "Context: Sorting data using the strategy (not sure how it'll do it)\n";
-        std::string result = this->strategy_->DoAlgorithm(std::vector<std::string>{"a", "e", "c", "b", "d"});
-        std::cout << result << "\n";
-        // ...
+        if (strategy_) {
+            std::cout << "Context: Sorting data using the strategy (not sure how it'll do it)\n";
+            std::string result = strategy_->doAlgorithm("aecbd");
+            std::cout << result << "\n";
+        } else {
+            std::cout << "Context: Strategy isn't set\n";
+        }
     }
 };
 
@@ -109,12 +106,9 @@ public:
 class ConcreteStrategyA : public Strategy
 {
 public:
-    std::string DoAlgorithm(const std::vector<std::string> &data) const override
+    std::string doAlgorithm(std::string_view data) const override
     {
-        std::string result;
-        std::for_each(std::begin(data), std::end(data), [&result](const std::string &letter) {
-            result += letter;
-        });
+        std::string result(data);
         std::sort(std::begin(result), std::end(result));
 
         return result;
@@ -122,17 +116,10 @@ public:
 };
 class ConcreteStrategyB : public Strategy
 {
-    std::string DoAlgorithm(const std::vector<std::string> &data) const override
+    std::string doAlgorithm(std::string_view data) const override
     {
-        std::string result;
-        std::for_each(std::begin(data), std::end(data), [&result](const std::string &letter) {
-            result += letter;
-        });
-        std::sort(std::begin(result), std::end(result));
-        for (int i = 0; i < result.size() / 2; i++)
-        {
-            std::swap(result[i], result[result.size() - i - 1]);
-        }
+        std::string result(data);
+        std::sort(std::begin(result), std::end(result), std::greater<>());
 
         return result;
     }
@@ -147,20 +134,19 @@ class ConcreteStrategyB : public Strategy
  * выбор.
  */
 
-void ClientCode()
+void clientCode()
 {
-    Context *context = new Context(new ConcreteStrategyA);
+    Context context(std::make_unique<ConcreteStrategyA>());
     std::cout << "Client: Strategy is set to normal sorting.\n";
-    context->DoSomeBusinessLogic();
+    context.doSomeBusinessLogic();
     std::cout << "\n";
     std::cout << "Client: Strategy is set to reverse sorting.\n";
-    context->set_strategy(new ConcreteStrategyB);
-    context->DoSomeBusinessLogic();
-    delete context;
+    context.set_strategy(std::make_unique<ConcreteStrategyB>());
+    context.doSomeBusinessLogic();
 }
 
 int main()
 {
-    ClientCode();
+    clientCode();
     return 0;
 }

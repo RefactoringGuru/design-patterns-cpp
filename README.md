@@ -10,7 +10,7 @@ It contains C++ examples for all classic GoF design patterns. Each pattern inclu
 
 ## Requirements
 
-The examples were written as cross platform console application using c++11. It means that you should be able to compile and execute those examples with any recent compiler.
+The examples were written as cross platform console application using c++17. It means that you should be able to compile and execute those examples with any recent compiler.
 
 we recommend working with Visual Studio Code because it is a lightweight and cross-platform tool .It is a very complete IDE and is available for free (https://code.visualstudio.com/). You may need to install c++ extension and the compiler you prefer (The extension is still in preview and its focus is code editing, navigation, and debugging support for C and C++). For more information on how to use VSCode with c++ refer to: https://code.visualstudio.com/docs/languages/cpp .
 
@@ -23,7 +23,7 @@ For code execution in VSCode you will need to set up your task first. An example
         {
             "label": "build",
             "type": "shell",
-            "command": "g++ -g -std=c++11 Conceptual/main.cc -o main",
+            "command": "g++ -g -std=c++17 Conceptual/main.cc -o main",
             "group":{
                 "kind": "build",
                 "isDefault": true    
