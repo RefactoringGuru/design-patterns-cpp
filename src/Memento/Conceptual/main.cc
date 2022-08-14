@@ -167,9 +167,12 @@ class Caretaker {
   Originator *originator_;
 
  public:
-  Caretaker(Originator *originator) : originator_(originator) {
-    this->originator_ = originator;
-  }
+     Caretaker(Originator* originator) : originator_(originator) {
+     }
+
+     ~Caretaker() {
+         for (auto m : mementos_) delete m;
+     }
 
   void Backup() {
     std::cout << "\nCaretaker: Saving Originator's state...\n";
