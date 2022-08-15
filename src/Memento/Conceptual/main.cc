@@ -27,6 +27,7 @@
  */
 class Memento {
  public:
+  virtual ~Memento() {}
   virtual std::string GetName() const = 0;
   virtual std::string date() const = 0;
   virtual std::string state() const = 0;
@@ -167,9 +168,12 @@ class Caretaker {
   Originator *originator_;
 
  public:
-  Caretaker(Originator *originator) : originator_(originator) {
-    this->originator_ = originator;
-  }
+     Caretaker(Originator* originator) : originator_(originator) {
+     }
+
+     ~Caretaker() {
+         for (auto m : mementos_) delete m;
+     }
 
   void Backup() {
     std::cout << "\nCaretaker: Saving Originator's state...\n";
