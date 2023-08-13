@@ -5,7 +5,7 @@ This repository is part of the [Refactoring.Guru](https://refactoring.guru/desig
 It contains C++ examples for all classic GoF design patterns. Each pattern includes two examples:
 
 - [x] **Conceptual** examples show the internal structure of patterns with detailed comments.
-- [ ] **RealWold** examples show how the patterns can be used in a real-world C++ application.
+- [ ] **RealWorld** examples show how the patterns can be used in a real-world C++ application.
 
 
 ## Requirements
@@ -43,7 +43,7 @@ Here's a style guide which might help you to keep your changes consistent with t
 
 1. All code should match the [Google style guide].
 2. Aim to put all code within one .cc file. Yes, I realize that it's not how it supposed to be done in production. However, it helps people to understand examples better, since all code fits into one screen.
-3. The comments doesn't follow the style guide for compatibility reasons withe other language examples. 
+3. The comments doesn't follow the style guide for compatibility reasons with other language examples. 
 
 
 
