@@ -1,0 +1,7 @@
+<body>
+<h1>Title of the Page</h1>
+<h2>Subtitle A</h2>
+<p>Lorem ipsum dolor sit amet, ...</p>
+<h2>Subtitle B</h2>
+<p>... consectetur adipiscing elit.</p>
+</body>
