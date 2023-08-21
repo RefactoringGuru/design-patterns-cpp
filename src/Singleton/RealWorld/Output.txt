@@ -1,0 +1,9 @@
+//// Logger Singleton ////
+****	LOGGER	START UP	****
+1	[WARNING]
+	Be careful with this potential issue.
+2	[INFO]
+	Here are some extra details.
+3	[ERROR]
+	A major problem has caused a fatal stoppage.
+****	LOGGER	SHUT DOWN	****
