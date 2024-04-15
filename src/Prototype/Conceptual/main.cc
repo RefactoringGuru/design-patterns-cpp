@@ -49,10 +49,10 @@ class Prototype {
  * EN: ConcretePrototype1 is a Sub-Class of Prototype and implement the Clone Method
  * In this example all data members of Prototype Class are in the Stack. If you
  * have pointers in your properties for ex: String* name_ ,you will need to
- * implement the Copy-Constructor to make sure you have a deep copy from the 
+ * implement the Copy-Constructor to make sure you have a deep copy from the
  * clone method
  *
- * RU: 
+ * RU:
  */
 
 class ConcretePrototype1 : public Prototype {
@@ -66,10 +66,10 @@ class ConcretePrototype1 : public Prototype {
 
   /**
      * EN: Notice that Clone method return a Pointer to a new ConcretePrototype1 replica. so, the client
-     * (who call the clone method) has the responsability to free that memory. I you have
+     * (who call the clone method) has the responsability to free that memory. If you have
      * smart pointer knowledge you may prefer to use unique_pointer here.
      *
-     * RU: 
+     * RU:
      */
   Prototype *Clone() const override {
     return new ConcretePrototype1(*this);
@@ -90,11 +90,11 @@ class ConcretePrototype2 : public Prototype {
 };
 
 /**
- * EN: In PrototypeFactory you have two concrete prototypes, one for each concrete 
- * prototype class, so each time you want to create a bullet , 
+ * EN: In PrototypeFactory you have two concrete prototypes, one for each concrete
+ * prototype class, so each time you want to create a bullet ,
  * you can use the existing ones and clone those.
  *
- * RU: 
+ * RU:
  */
 
 class PrototypeFactory {
@@ -111,7 +111,7 @@ class PrototypeFactory {
      * EN: Be carefull of free all memory allocated. Again, if you have smart pointers knowelege
      * will be better to use it here.
      *
-     * RU: 
+     * RU:
      */
 
   ~PrototypeFactory() {
@@ -123,7 +123,7 @@ class PrototypeFactory {
      * EN: Notice here that you just need to specify the type of the prototype you want and the method
      * will create from the object with this type.
      *
-     * RU: 
+     * RU:
      */
   Prototype *CreatePrototype(Type type) {
     return prototypes_[type]->Clone();
