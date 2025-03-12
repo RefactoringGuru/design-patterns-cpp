@@ -143,6 +143,7 @@ class Originator {
   void Restore(Memento *memento) {
     this->state_ = memento->state();
     std::cout << "Originator: My state has changed to: " << this->state_ << "\n";
+    delete memento;
   }
 };
 
